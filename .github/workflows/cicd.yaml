@@ -1,0 +1,17 @@
+name: DevSecOps CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Docker image
+      run: docker build -t ghcr.io/aly109/devsecops-app:latest -f app/Dockerfile app/
+    - name: Login to GHCR
+      run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u aly109 --password-stdin
+    - name: Push image
+      run: docker push ghcr.io/aly109/devsecops-app:latest

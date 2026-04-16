@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevSecOps Workshop - API Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .endpoint {
+            background: #f4f4f4;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .method {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background: #5a67d8;
+        }
+        pre {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+        .flex {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .flex .card {
+            flex: 1;
+            min-width: 250px;
+        }
+        @media (max-width: 768px) {
+            .flex {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DevSecOps Workshop API Dashboard</h1>
+        
+        <div class="flex">
+            <div class="card">
+                <h2>📊 System Status</h2>
+                <div class="endpoint">
+                    <span class="method">GET</span> /api/health
+                </div>
+                <button onclick="testHealth()">Test Health Endpoint</button>
+                <div id="healthResult"></div>
+            </div>
+            
+            <div class="card">
+                <h2>👥 Users API</h2>
+                <div class="endpoint">
+                    <span class="method">GET</span> /api/users
+                </div>
+                <button onclick="testUsers()">Get All Users</button>
+                <div id="usersResult"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 API Information</h2>
+            <p>This dashboard allows you to test the DevSecOps Workshop API endpoints.</p>
+            <p><strong>Status:</strong> All systems operational <span class="status-badge">✅ Live</span></p>
+            <p><strong>Security Features:</strong> Helmet, CORS, Morgan, Rate Limiting</p>
+            <p><strong>CI/CD Pipeline:</strong> GitHub Actions with Jest tests, npm audit, Trivy scanning</p>
+        </div>
+        
+        <div class="footer">
+            <p>DevSecOps Workshop | Secure by Design | Shift-Left Security</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        
+        async function testHealth() {
+            const resultDiv = document.getElementById('healthResult');
+            resultDiv.innerHTML = '<pre>Loading...</pre>';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testUsers() {
+            const resultDiv = document.getElementById('usersResult');
+            resultDiv.innerHTML = '<pre>Loading...</pre>';
+            
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+        
+        // Auto-load health on page load
+        testHealth();
+    </script>
+</body>
+</html>

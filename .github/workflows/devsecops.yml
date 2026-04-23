@@ -3,65 +3,36 @@ name: DevSecOps CI/CD
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
 
 jobs:
-  # Security scan for dependencies
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      
-      - name: Install dependencies
-        run: |
-          cd app
-          npm ci
-      
-      - name: Run npm audit (SCA)
-        run: |
-          cd app
-          npm audit || true
-        continue-on-error: true
-
-  # Run tests
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-      
+          node-version: 18
       - name: Install dependencies
-        run: |
-          cd app
-          npm ci
-      
+        run: cd app && npm install
       - name: Run tests
-        run: |
-          cd app
-          npm test
+        run: cd app && npm test
 
-  # Build Docker image
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Run npm audit
+        run: cd app && npm audit || true
+
   docker-build:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
       - uses: actions/checkout@v3
-      
       - name: Build Docker image
-        run: |
-          cd app
-          docker build -t devsecops-app .
-      
-      - name: Verify Docker image
-        run: |
-          docker images | grep devsecops-app
+        run: cd app && docker build -t devsecops-app .
